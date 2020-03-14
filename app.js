@@ -1,5 +1,5 @@
 // Тоглогчийн ээлжийг хадгалах хувьсагч , нэгдүгээр тоглогч 0 , хоёрдугаар тоглогч 1
-var activePlayer = 1;
+var activePlayer = 0;
 
 // Тоглогчийн цуглуулсан оноо хадгалах хувьсагч
 var scores = [0, 0];
@@ -36,8 +36,47 @@ document.getElementById("current-1").textContent = "0";
 //     alert("Шоо шидлээ: " + diceNumber);
 //   }
 //2.Anonymous function бичсэн зүгээр юм байна. Мэргэжлийн маяг
+// Шоо хаях eventListener
 document.querySelector(".btn-roll").addEventListener("click", function() {
+  //Санамсаргүй байдлаар 1 - 6 тоог гаргах diceNumber хувьсагч
   var diceNumber = Math.floor(Math.random() * 6 + 1);
+
+  //Шооны зургыг гаргах
   diceDom.style.display = "block";
+
+  //Санамсаргүй байдлаар үүсэн доог аваад веб дээр гаргана.
   diceDom.src = "dice-" + diceNumber + ".png";
+
+  //Идэвхтэй тоглогчийн буусан оноог current score дээр нэмэх
+
+  if (diceNumber !== 1) {
+    //diceNumber = 1 бол буссан оноог Active тоглогчид нэмнэ.
+    roundScore = roundScore + diceNumber;
+    document.getElementById("current-" + activePlayer).textContent = roundScore;
+  } else {
+    //Хэрвээ diceNumber = 1 бич бол тоглогчийн ээлжийн оноог 0 болгож дараагийн тоглогч руу шилжинэ.
+    //Тэр active тоглогч руу оноог нэмнэ.Active тоглогчийг улаан цэгээр оноож өгнө.
+    document.getElementById("current-" + activePlayer).textContent = 0;
+    diceDom.style.display = "none";
+    roundScore = 0;
+    if (activePlayer == 1) {
+      activePlayer = 0;
+    } else {
+      activePlayer = 1;
+    }
+    document.getElementById("current-" + activePlayer).textContent = roundScore;
+    document.querySelector(".player-0-panel").classList.toggle("active");
+    document.querySelector(".player-1-panel").classList.toggle("active");
+    //classList ээр div дотор хоёр class байгаа шалгаж (add) аар class нэмж болно бас (remove) аар class устгаж болно.
+    //энэ ээлжлэн шилжих байдлаар явагдах тул (toggle) ийг ашиглан.
+  }
 });
+document.querySelector(".btn-hold").addEventListener("click", onooNemeh);
+
+function onooNemeh() {
+  if (activePlayer == 0) {
+    document.getElementById("score-0").textContent = roundScore;
+  } else {
+    document.getElementById("score-1").textContent = roundScore;
+  }
+}
