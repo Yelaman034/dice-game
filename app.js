@@ -54,8 +54,9 @@ document.querySelector(".btn-roll").addEventListener("click", function() {
     roundScore = roundScore + diceNumber;
     document.getElementById("current-" + activePlayer).textContent = roundScore;
   } else {
-    //Хэрвээ diceNumber = 1 бич бол тоглогчийн ээлжийн оноог 0 болгож дараагийн тоглогч руу шилжинэ.
+    //Хэрвээ diceNumber = 1 бол тоглогчийн ээлжийн оноог 0 болгож дараагийн тоглогч руу шилжинэ.
     //Тэр active тоглогч руу оноог нэмнэ.Active тоглогчийг улаан цэгээр оноож өгнө.
+    // nextDice();
     document.getElementById("current-" + activePlayer).textContent = 0;
     diceDom.style.display = "none";
     roundScore = 0;
@@ -71,12 +72,28 @@ document.querySelector(".btn-roll").addEventListener("click", function() {
     //энэ ээлжлэн шилжих байдлаар явагдах тул (toggle) ийг ашиглан.
   }
 });
-document.querySelector(".btn-hold").addEventListener("click", onooNemeh);
-
-function onooNemeh() {
-  if (activePlayer == 0) {
-    document.getElementById("score-0").textContent = roundScore;
+document.querySelector(".btn-hold").addEventListener("click", function() {
+  // scores[0] = scores[0] + roundScore;
+  scores[activePlayer] = scores[activePlayer] + roundScore;
+  document.getElementById("score-" + activePlayer).textContent =
+    scores[activePlayer];
+  if (scores[activePlayer] >= 10) {
+    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!!";
   } else {
-    document.getElementById("score-1").textContent = roundScore;
+    nextDice();
   }
+});
+//
+function nextDice() {
+  document.getElementById("current-" + activePlayer).textContent = 0;
+  diceDom.style.display = "none";
+  roundScore = 0;
+  if (activePlayer == 1) {
+    activePlayer = 0;
+  } else {
+    activePlayer = 1;
+  }
+  document.getElementById("current-" + activePlayer).textContent = roundScore;
+  document.querySelector(".player-0-panel").classList.toggle("active");
+  document.querySelector(".player-1-panel").classList.toggle("active");
 }
