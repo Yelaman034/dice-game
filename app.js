@@ -1,4 +1,6 @@
 // Тоглогчийн ээлжийг хадгалах хувьсагч , нэгдүгээр тоглогч 0 , хоёрдугаар тоглогч 1
+//тогломын төлөвийн хувьсагч
+var isGameOver;
 var activePlayer;
 // Тоглогчийн цуглуулсан оноо хадгалах хувьсагч
 var scores;
@@ -15,6 +17,7 @@ var diceDom = document.querySelector(".dice");
 
 initGame();
 function initGame() {
+  isGameOver = false;
   activePlayer = 0;
   scores = [0, 0];
   roundScore = 0;
@@ -48,52 +51,66 @@ function initGame() {
 //2.Anonymous function бичсэн зүгээр юм байна. Мэргэжлийн маяг
 // Шоо хаях eventListener
 document.querySelector(".btn-roll").addEventListener("click", function() {
-  //Санамсаргүй байдлаар 1 - 6 тоог гаргах diceNumber хувьсагч
-  var diceNumber = Math.floor(Math.random() * 6 + 1);
+  if (isGameOver == false) {
+    //Санамсаргүй байдлаар 1 - 6 тоог гаргах diceNumber хувьсагч
+    var diceNumber = Math.floor(Math.random() * 6 + 1);
 
-  //Шооны зургыг гаргах
-  diceDom.style.display = "block";
+    //Шооны зургыг гаргах
+    diceDom.style.display = "block";
 
-  //Санамсаргүй байдлаар үүсэн доог аваад веб дээр гаргана.
-  diceDom.src = "dice-" + diceNumber + ".png";
+    //Санамсаргүй байдлаар үүсэн доог аваад веб дээр гаргана.
+    diceDom.src = "dice-" + diceNumber + ".png";
 
-  //Идэвхтэй тоглогчийн буусан оноог current score дээр нэмэх
+    //Идэвхтэй тоглогчийн буусан оноог current score дээр нэмэх
 
-  if (diceNumber !== 1) {
-    //diceNumber = 1 бол буссан оноог Active тоглогчид нэмнэ.
-    roundScore = roundScore + diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
-  } else {
-    //Хэрвээ diceNumber = 1 бол тоглогчийн ээлжийн оноог 0 болгож дараагийн тоглогч руу шилжинэ.
-    //Тэр active тоглогч руу оноог нэмнэ.Active тоглогчийг улаан цэгээр оноож өгнө.
-    // nextDice();
-    document.getElementById("current-" + activePlayer).textContent = 0;
-    diceDom.style.display = "none";
-    roundScore = 0;
-    if (activePlayer == 1) {
-      activePlayer = 0;
+    if (diceNumber !== 1) {
+      //diceNumber = 1 бол буссан оноог Active тоглогчид нэмнэ.
+      roundScore = roundScore + diceNumber;
+      document.getElementById(
+        "current-" + activePlayer
+      ).textContent = roundScore;
     } else {
-      activePlayer = 1;
+      //Хэрвээ diceNumber = 1 бол тоглогчийн ээлжийн оноог 0 болгож дараагийн тоглогч руу шилжинэ.
+      //Тэр active тоглогч руу оноог нэмнэ.Active тоглогчийг улаан цэгээр оноож өгнө.
+      // nextDice();
+      document.getElementById("current-" + activePlayer).textContent = 0;
+      diceDom.style.display = "none";
+      roundScore = 0;
+      if (activePlayer == 1) {
+        activePlayer = 0;
+      } else {
+        activePlayer = 1;
+      }
+      document.getElementById(
+        "current-" + activePlayer
+      ).textContent = roundScore;
+      document.querySelector(".player-0-panel").classList.toggle("active");
+      document.querySelector(".player-1-panel").classList.toggle("active");
+      //classList ээр div дотор хоёр class байгаа шалгаж (add) аар class нэмж болно бас (remove) аар class устгаж болно.
+      //энэ ээлжлэн шилжих байдлаар явагдах тул (toggle) ийг ашиглан.
     }
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
-    document.querySelector(".player-0-panel").classList.toggle("active");
-    document.querySelector(".player-1-panel").classList.toggle("active");
-    //classList ээр div дотор хоёр class байгаа шалгаж (add) аар class нэмж болно бас (remove) аар class устгаж болно.
-    //энэ ээлжлэн шилжих байдлаар явагдах тул (toggle) ийг ашиглан.
+  } else {
+    alert("Game Over");
   }
 });
 document.querySelector(".btn-hold").addEventListener("click", function() {
-  // scores[0] = scores[0] + roundScore;
-  scores[activePlayer] = scores[activePlayer] + roundScore;
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  if (scores[activePlayer] >= 10) {
-    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!!";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
+  if (isGameOver == false) {
+    // scores[0] = scores[0] + roundScore;
+    scores[activePlayer] = scores[activePlayer] + roundScore;
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    if (scores[activePlayer] >= 20) {
+      isGameOver = true;
+      document.getElementById("name-" + activePlayer).textContent =
+        "WINNER!!!!";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+    } else {
+      nextDice();
+    }
   } else {
-    nextDice();
+    alert("Game Over");
   }
 });
 //
