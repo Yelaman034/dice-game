@@ -1,29 +1,39 @@
 // Тоглогчийн ээлжийг хадгалах хувьсагч , нэгдүгээр тоглогч 0 , хоёрдугаар тоглогч 1
-var activePlayer = 0;
-
+var activePlayer;
 // Тоглогчийн цуглуулсан оноо хадгалах хувьсагч
-var scores = [0, 0];
-
+var scores;
 // Тоглогчийн ээлжний цуглуулж байгаа оноо хадгалах хувьсагч
-var roundScore = 0;
-
+var roundScore;
 //Шоо аль талаар буусныг хадгалах хувьсагч 1-6 гэсэн утгыг энэ хувьсагчид санамсаргүй байдлаар үүснэ.
 var diceNumber = Math.floor(Math.random() * 6 + 1);
 
 // window.document.querySelector("#score-0").textContent = dice;
-
 //Хоёр тоглогчийн оноог 0 болгий.
-document.getElementById("score-0").textContent = "0";
-document.getElementById("score-1").textContent = "0";
 
 //Шоо аль тал буусаныг алаг болгий
 var diceDom = document.querySelector(".dice");
-diceDom.style.display = "none";
 
-//Тоглогчийн roundScore 0 болгий.
-document.getElementById("current-0").textContent = "0";
-document.getElementById("current-1").textContent = "0";
+initGame();
+function initGame() {
+  activePlayer = 0;
+  scores = [0, 0];
+  roundScore = 0;
+  diceDom.style.display = "none";
+  //Тоглогчийн roundScore 0 болгий.
+  document.getElementById("score-0").textContent = "0";
+  document.getElementById("score-1").textContent = "0";
+  document.getElementById("current-0").textContent = "0";
+  document.getElementById("current-1").textContent = "0";
+  document.getElementById("name-0").textContent = "PLAYER 1";
+  document.getElementById("name-1").textContent = "PLAYER 2";
 
+  document.querySelector(".player-0-panel").classList.remove("active");
+  document.querySelector(".player-1-panel").classList.remove("active");
+  document.querySelector(".player-0-panel").classList.add("active");
+
+  document.querySelector(".player-0-panel").classList.remove("winner");
+  document.querySelector(".player-1-panel").classList.remove("winner");
+}
 //Roll dice btn идэвтэй болгох!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //1.Callback function бичсэн нь
@@ -79,6 +89,9 @@ document.querySelector(".btn-hold").addEventListener("click", function() {
     scores[activePlayer];
   if (scores[activePlayer] >= 10) {
     document.getElementById("name-" + activePlayer).textContent = "WINNER!!!!";
+    document
+      .querySelector(".player-" + activePlayer + "-panel")
+      .classList.add("winner");
   } else {
     nextDice();
   }
@@ -97,3 +110,4 @@ function nextDice() {
   document.querySelector(".player-0-panel").classList.toggle("active");
   document.querySelector(".player-1-panel").classList.toggle("active");
 }
+document.querySelector(".btn-new").addEventListener("click", initGame);
